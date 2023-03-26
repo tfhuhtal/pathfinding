@@ -8,7 +8,7 @@
 ## Algoritmit ja tietorakenteet
 
 - Toteutan työssäni Dijkstran algoritmin, A-star hakualgoritmin ja Jump Point Search algoritmin.
-- Syötteinä ohjelmani saa ASCII kartan sekä lähtö- ja maalikoordinaatit.
+- Syötteinä ohjelmani saa matriisin jonka jokaisella solmulla on jokin arvo sekä lähtö- ja maalikoordinaatit.
 
 ## Aika- ja tilavaativuus
 
