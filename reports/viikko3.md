@@ -28,3 +28,5 @@ Seuraavaksi teen seuraavia asioita:
 - Lisään algoritmeihin mahdollisuuden laskea reitin pituuksia.
 - Mahdollisesti lisään toteutan JPS algoritmin.
 
+
+Tällä viikolla käytin projektiin aikaa 20 tuntia.
