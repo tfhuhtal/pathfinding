@@ -34,7 +34,7 @@ class Dijkstra:
         self.visited = [[False] * self.cols for _ in range(self.rows)]
         self.distances = [[float('inf')] * self.cols for _ in range(self.rows)]
         self.previous = [[None] * self.cols for _ in range(self.rows)]
-        self.directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        self.directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]
         self.operations = 0
 
     def dijkstra(self, start, end):

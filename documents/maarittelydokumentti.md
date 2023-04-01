@@ -8,7 +8,7 @@
 ## Algoritmit ja tietorakenteet
 
 - Toteutan työssäni Dijkstran algoritmin, A-star hakualgoritmin ja Jump Point Search algoritmin.
-- Syötteinä ohjelmani saa matriisin jonka jokaisella solmulla on jokin arvo sekä lähtö- ja maalikoordinaatit.
+- Syötteinä ohjelmani saa matriisin jonka jokaisella solmulla on joko arvo 0 tai 1, sekä lähtö- ja maalikoordinaatit. 0-solmut tarkoittavat käveltävää solmua ja 1-solmut esteitä joiden kautta ei voi edetä.
 
 ## Aika- ja tilavaativuus
 
