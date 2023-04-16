@@ -24,9 +24,9 @@ Tällä viikolla ei ollut epäselvyyksiä tai vaikeuksia.
 
 Seuraavaksi teen seuraavia asioita:
 
-- Lisään algoritmeihin tietorakenteen node jotta voidaan laskea reitin oikea pituus. Tällä hetkellä algoritmit laskevat reitin pituuden väärin. Sillä diagonaalinen reitti on yhtä pitkä kuin vaakasuora tai pystysuora reitti.
+- Lisään algoritmeihin Node tietorakenteen, jotta voidaan laskea reitin oikea pituus. Tällä hetkellä algoritmit laskevat reitin pituuden väärin. Sillä diagonaalinen reitti on yhtä pitkä kuin vaakasuora tai pystysuora reitti.
 - Lisään algoritmeihin mahdollisuuden laskea reitin pituuksia.
-- Mahdollisesti lisään toteutan JPS algoritmin.
+- Mahdollisesti toteutan JPS algoritmin.
 
 
 Tällä viikolla käytin projektiin aikaa 20 tuntia.

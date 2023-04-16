@@ -1,3 +1,5 @@
+import math
+
 class Dijkstra:
     """
     Algorithm:
@@ -50,7 +52,10 @@ class Dijkstra:
             for direction in self.directions:
                 neighbor = (current[0] + direction[0], current[1] + direction[1])
                 if self.is_valid(neighbor):
-                    new_distance = self.distances[current[0]][current[1]] + 1
+                    if direction in [(1, 1), (1, -1), (-1, 1), (-1, -1)]:
+                        new_distance = self.distances[current[0]][current[1]] + math.sqrt(2)
+                    else:
+                        new_distance = self.distances[current[0]][current[1]] + 1
                     if new_distance < self.distances[neighbor[0]][neighbor[1]]:
                         self.distances[neighbor[0]][neighbor[1]] = new_distance
                         self.previous[neighbor[0]][neighbor[1]] = current

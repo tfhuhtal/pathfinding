@@ -49,21 +49,21 @@ def main():
     path = dijkstra.dijkstra(start, end)
     end_time = time()
     opr = dijkstra.get_operations()
-    length = len(path)
+    length = dijkstra.distances[end[0]][end[1]]
     print(f"Dijkstra: Path length: {length} Time taken: {(end_time - start_time)*1000:.2f} ms Operations: {opr}")
 
     start_time = time()
     path = a_star.a_star(start, end)
     end_time = time()
-    opr = a_star.get_operations()
-    length = len(path)
+    opr = a_star.operations
+    length = a_star.distances[end[0]][end[1]]
     print(f"A*: Path length: {length} Time taken: {(end_time - start_time)*1000:.2f} ms Operations: {opr}")
 
     path = [(x, y) for y, x in path]
 
     draw = ImageDraw.Draw(image)
     draw.line(path, fill=(255,0,0),width=1)
-    image.save("path_den.png")
+    image.save("path.png")
 
 
 if __name__ == "__main__":

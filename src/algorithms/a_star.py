@@ -56,7 +56,13 @@ class AStar:
             for direction in self.directions:
                 neighbor = (current[0] + direction[0], current[1] + direction[1])
                 if self.is_valid(neighbor):
-                    new_distance = self.distances[current[0]][current[1]] + 1
+                    if direction in [(1,1), (1,-1), (-1,1), (-1,-1)]:
+                        # Diagonal movement, distance is sqrt(2)
+                        new_distance = self.distances[current[0]][current[1]] + math.sqrt(2)
+                    else:
+                        # Horizontal/Vertical movement, distance is 1
+                        new_distance = self.distances[current[0]][current[1]] + 1
+    
                     if new_distance < self.distances[neighbor[0]][neighbor[1]]:
                         self.distances[neighbor[0]][neighbor[1]] = new_distance
                         self.previous[neighbor[0]][neighbor[1]] = current
@@ -65,7 +71,8 @@ class AStar:
         return self.get_path(start, end)
 
     def heuristic(self, node, end):
-        return math.sqrt((node[0] - end[0]) ** 2 + (node[1] - end[1]) ** 2)
+        return abs(node[0] - end[0]) + abs(node[1] - end[1])
+
 
     def is_valid(self, node):
         return (0 <= node[0] < self.rows
