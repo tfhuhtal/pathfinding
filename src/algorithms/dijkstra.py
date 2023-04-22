@@ -59,7 +59,6 @@ class Dijkstra:
                     if new_distance < self.distances[neighbor[0]][neighbor[1]]:
                         self.distances[neighbor[0]][neighbor[1]] = new_distance
                         self.previous[neighbor[0]][neighbor[1]] = current
-                        self.operations += 1
 
 
         return self.get_path(start, end)
@@ -88,9 +87,4 @@ class Dijkstra:
             current = self.previous[current[0]][current[1]]
         path.append(start)
         return path[::-1]
-
-    def get_operations(self):
-        opr = self.operations
-        self.operations = 0
-        return opr
     

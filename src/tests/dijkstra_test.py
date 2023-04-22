@@ -100,4 +100,4 @@ class TestDijkstra(unittest.TestCase):
         start = (0, 0)
         end = (3, 3)
         self.dijkstra.dijkstra(start, end)
-        self.assertEqual(self.dijkstra.get_operations(), 22)
+        self.assertEqual(self.dijkstra.operations, 12)

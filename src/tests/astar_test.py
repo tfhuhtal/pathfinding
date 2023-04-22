@@ -1,6 +1,6 @@
 import unittest
 from algorithms.dijkstra import Dijkstra
-from algorithms.a_star import AStar
+from algorithms.astar import AStar
 
 class TestAStar(unittest.TestCase):
     """
@@ -97,4 +97,4 @@ class TestAStar(unittest.TestCase):
         start = (0, 0)
         end = (3, 3)
         self.a_star.a_star(start, end)
-        self.assertEqual(self.a_star.get_operations(), 5)
+        self.assertEqual(self.a_star.operations, 5)
