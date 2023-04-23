@@ -4,7 +4,7 @@
 
 ### Yksikkötestaus
 
-Yksikkötestauksessa testataan Dijkstra-luokkaa ja AStar-luokkaa. Nämä testit ovat toteutettu Pytest kirjastolla. Dijkstran lyhimmän polun algoritmia testataan pienellä 4x4 matriisilla missä on vain yksi reitti lähtöpisteestä maaliin.
+Yksikkötestauksessa testataan Dijkstra-luokkaa, AStar-luokkaa ja JPS-luokkaa. Nämä testit ovat toteutettu Pytest kirjastolla. Dijkstran lyhimmän polun algoritmia testataan pienellä 4x4 matriisilla missä on vain yksi reitti lähtöpisteestä maaliin.
 ```python
 def setUp(self):
     self.maze = [
@@ -112,15 +112,15 @@ def test_operation_count(self):
         self.a_star.a_star(start, end)
         self.assertEqual(self.a_star.get_operations(), 5)
 ```
+### JPS algoritmi
+
+Jump point search -algoritmia on tällä hetkellä testattu osittain samoilla testeillä kuin A-star algoritmia. Tämä johtuu siitä, että JPS algoritmi on A-star algoritmin muokkaus.
+
 ## Testikattavuus
 
 ![image info](./images/test_coverage.png)
 
-Kuten kuvasta näkee testikattavuus on 99%, vain yksi rivi koodia ei ole testattu. Tämä rivi koodia on seuraava:
-```python
-if self.visited[current[0]][current[1]]:
-    continue
-```
+Kuten kuvasta näkee testikattavuus on 85%%, vain joitakin jps algoritmin kohtia ei ole testattu kokonaan. Tämä johtuu siitä, että jps algoritmin testaaminen on haastavaa ja vielä en ole löytänyt sopivaa tapaa testata sitä kattavasti.
 
 ## Testaus ohjeet
 

@@ -10,15 +10,16 @@ Sovelluksen tarkoitus on vertailla eri polkujen etsintä algoritmeja. Sovellus o
 
 ## Sovelluksen käyttö
 
-Sovelluksen käynnistämiseksi suoritetaan komento `python3 main.py`. Sovelluksen käynnistyksen jälkeen käyttäjä näkee ohjeet sovelluksen käyttöön. Käyttäjä syöttää haluamansa algoritmin ja syötteen. Sovellus tulostaa polun ja sen pituuden. Sovelluksen voi lopettaa syöttämällä komennon `q`. Sovelluksen syötteenä kelpaa myös tiedoston nimi, joka sisältää kartan. Tällöin sovellus tulostaa polun ja sen pituuden. Tiedoston tulee olla samassa kansiossa kuin sovellus.
+Sovelluksen käynnistämiseksi suoritetaan komento `python3 main.py`. Sovelluksen syötteenä kelpaa myös tiedoston nimi, joka sisältää kartan. Tällöin sovellus tulostaa polun ja sen pituuden. Tiedoston tulee olla samassa kansiossa kuin sovellus.
 
 ## Sovelluksen toteutus
 
 Sovellus on toteutettu Python-ohjelmointikielellä. Sovelluksen toteutus on jaettu kahteen osaan: algoritmien toteutus ja käyttöliittymä. 
 
-### Algoritmien toteutus
+## Algoritmien toteutus
 
-Dijkstran lyhimmänpolun algoritmi:
+### Dijkstran lyhimmänpolun algoritmi:
+- algoritmin aikavaativuus on O(|V|^2), missä V on solmujen määrä.
 
 ```python
 def dijkstra(self, start, end):
@@ -47,7 +48,8 @@ def dijkstra(self, start, end):
         return self.get_path(start, end)
 ```
 
-A*-algoritmi:
+### A*-algoritmi:
+- huonoimmassa tapauksessa A* tekee yhtä monta operaatiota kuin Dijkstran algoritmi, mutta keskimäärin A* tekee paljon vähemmän operaatioita.
 
 ```python
 def a_star(self, start, end):
@@ -82,7 +84,10 @@ def a_star(self, start, end):
         return self.get_path(start, end)
 ```
 
-### Käyttöliittymä
+### Jps-algoritmi:
+- JPS-algoritmin aikavaativuus on O(b^d), missä b on solmujen määrä ja d on syvyys.
+
+## Käyttöliittymä
 
 Käyttöliittymää ei ole vielä toteutettu.
 
@@ -91,3 +96,5 @@ Käyttöliittymää ei ole vielä toteutettu.
 [1] [Dijkstran algoritmi](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
 
 [2] [A* algoritmi](https://en.wikipedia.org/wiki/A*_search_algorithm)
+
+[3] [JPS algoritmi](https://en.wikipedia.org/wiki/Jump_point_search)
