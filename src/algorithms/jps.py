@@ -7,7 +7,6 @@ def jps(start, goal, grid):
         return x < 0 or y < 0 or x >= len(grid) or y >= len(grid[0]) or grid[x][y] == 1
 
     def has_forced_neighbour(x, y):
-        # check for all possible neighbours of (x,y) whether they are forced
         for dx, dy in ((0, 1), (1, 0), (0, -1), (-1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)):
             nx, ny = x + dx, y + dy
             if not is_obstructed(nx, ny) and (dx, dy) != (0, 0)\
