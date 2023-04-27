@@ -1,139 +1,108 @@
 import math
 import heapq
 
-class JumpPointSearch:
-    """
-    Jump Point Search Algorithm
-    """
+def jps(start, goal, grid):
 
-    def __init__(self, maze):
-        self.maze = maze
-        self.rows = len(maze)
-        self.cols = len(maze[0])
-        self.visited = [[False] * self.cols for _ in range(self.rows)]
-        self.distances = [[float('inf')] * self.cols for _ in range(self.rows)]
-        self.previous = [[None] * self.cols for _ in range(self.rows)]
-        self.directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]
-        self.operations = 0
+    def is_obstructed(x, y):
+        return x < 0 or y < 0 or x >= len(grid) or y >= len(grid[0]) or grid[x][y] == 1
 
-    def search(self, start, end):
-        # Initialize start node
-        self.distances[start[0]][start[1]] = 0
-        self.visited[start[0]][start[1]] = True
-        heap = [(0, start)]
-        heapq.heapify(heap)
+    def has_forced_neighbour(x, y):
+        # check for all possible neighbours of (x,y) whether they are forced
+        for dx, dy in ((0, 1), (1, 0), (0, -1), (-1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)):
+            nx, ny = x + dx, y + dy
+            if not is_obstructed(nx, ny) and (dx, dy) != (0, 0)\
+                and (dx, dy) != (last_dir[x][y][0], last_dir[x][y][1]):
+                if (nx, ny) == goal or \
+                    is_obstructed(nx - last_dir[nx][ny][0], ny - last_dir[nx][ny][1]):
+                    return True
+        return False
 
-        # Main loop
-        while heap:
-            _, current = heapq.heappop(heap)
-            self.operations += 1
-
-            # Goal found
-            if current == end:
-                return self.get_path(start, end)
-
-            # Explore neighbors
-            for neighbor in self.get_neighbors(current):
-                jump_point = self.jump(neighbor, current, end)
-                if jump_point is None:
-                    continue
-
-                # Calculate tentative distance to jump point
-                tentative_distance = self.distances[current[0]][current[1]] + \
-                    math.sqrt((jump_point[0] - current[0]) ** 2 + (jump_point[1] - current[1]) ** 2)
-
-                # Update distance and previous node if better path found
-                if tentative_distance < self.distances[jump_point[0]][jump_point[1]]:
-                    self.distances[jump_point[0]][jump_point[1]] = tentative_distance
-                    self.previous[jump_point[0]][jump_point[1]] = current
-
-                    # Add to heap for further exploration
-                    priority = tentative_distance + self.heuristic(jump_point, end)
-                    heapq.heappush(heap, (priority, jump_point))
-
-                    # Mark as visited
-                    self.visited[jump_point[0]][jump_point[1]] = True
-
-        # Goal not found
-        return None
-
-    def jump(self, node, parent, end):
-        """
-        Jumps from the given node to its furthest ancestor that can be reached in a straight line.
-        Returns None if no jump point is found in this direction.
-        """
-        dx, dy = node[0] - parent[0], node[1] - parent[1]
-
-        # If the node is outside the grid or blocked, return None
-        if not self.is_valid(node) or self.maze[node[0]][node[1]]:
-            return None
-
-        # If the node is the end point, return it
-        if node == end:
-            return node
-
-        # Diagonal movement
-        if dx != 0 and dy != 0:
-            # Check for forced neighbors
-            if (self.is_valid((node[0] - dx, node[1])) and self.maze[node[0] - dx][node[1]]) or \
-               (self.is_valid((node[0], node[1] - dy)) and self.maze[node[0]][node[1] - dy]):
-                return node
-
-            # Recurse on diagonal
-            jump_node = self.jump((node[0] + dx, node[1]), node, end)
-            if jump_node:
-                return jump_node
-            jump_node = self.jump((node[0], node[1] + dy), node, end)
-            if jump_node:
-                return jump_node
-
-        # Horizontal movement
-        elif dx != 0:
-            # Check for forced neighbors
-            if (self.is_valid((node[0], node[1] + 1)) and self.maze[node[0]][node[1] + 1]) or \
-               (self.is_valid((node[0], node[1] - 1)) and self.maze[node[0]][node[1] - 1]):
-                return node
-
-            # Recurse on horizontal
-            jump_node = self.jump((node[0] + dx, node[1]), node, end)
-            if jump_node:
-                return jump_node
-
-        # Vertical movement
+    def direction(x, y):
+        dx, dy = y[0] - x[0], y[1] - x[1]
+        if dx > 0:
+            if dy > 0:
+                return (1, 1)
+            elif dy < 0:
+                return (1, -1)
+            else:
+                return (1, 0)
+        elif dx < 0:
+            if dy > 0:
+                return (-1, 1)
+            elif dy < 0:
+                return (-1, -1)
+            else:
+                return (-1, 0)
         else:
-            # Check for forced neighbors
-            if (self.is_valid((node[0] + 1, node[1])) and self.maze[node[0] + 1][node[1]]) or \
-               (self.is_valid((node[0] - 1, node[1])) and self.maze[node[0] - 1][node[1]]):
-                return node
+            if dy > 0:
+                return (0, 1)
+            else:
+                return (0, -1)
 
-            # Recurse on vertical
-            jump_node = self.jump((node[0], node[1] + dy), node, end)
-            if jump_node:
-                return jump_node
+    def prune(x, neighbours):
+        pruned = []
+        last_dir[x[0]][x[1]] = (0, 0)
+        for y in neighbours:
+            di = direction(x, y)
+            if di != last_dir[x[0]][x[1]]:
+                if is_obstructed(x[0] + di[0], x[1] + di[1]):
+                    continue
+                if di[0] != 0 and di[1] != 0 and (is_obstructed(x[0], x[1] + di[1]) \
+                    or is_obstructed(x[0] + di[0], x[1])):
+                    continue
+                pruned.append(y)
+            last_dir[y[0]][y[1]] = di
+        return pruned
 
-        # No jump point found in this direction
-        return None
+    def jump(x, d, s, g):
+        n = (x[0] + d[0], x[1] + d[1])
+        if is_obstructed(n[0], n[1]):
+            return None
+        if n == g:
+            return n
+        if has_forced_neighbour(n[0], n[1]):
+            return n
+        if d in [(1,1),(1,-1),(-1,1),(-1,-1)]:
+            for di in [(1,0),(0,1),(-1,0),(0,-1)]:
+                if jump(n, di, s, g) is not None:
+                    return n
+        return jump(n, d, s, g)
 
-    def get_neighbors(self, node):
-        neighbors = []
-        for direction in self.directions:
-            neighbor = (node[0] + direction[0], node[1] + direction[1])
-            if self.is_valid(neighbor) and not self.maze[neighbor[0]][neighbor[1]]:
-                neighbors.append(neighbor)
-        return neighbors
+    def neighbours(x):
+        n = []
+        for dx, dy in ((0, 1), (1, 0), (0, -1), (-1, 0)):
+            nx, ny = x[0] + dx, x[1] + dy
+            if not is_obstructed(nx, ny):
+                n.append((nx, ny))
+        return n
 
-    def is_valid(self, pos):
-        row, col = pos
-        return 0 <= row < len(self.maze) and 0 <= col < len(self.maze[0])
-
-    def heuristic(self, node, end):
-        return abs(node[0] - end[0]) + abs(node[1] - end[1])
-    
-    def get_path(self, start, end):
-        path = []
-        current = end
-        while current != start:
+    def reconstruct_path(came_from, current, operations):
+        path = [current]
+        while current in came_from:
+            current = came_from[current]
             path.append(current)
-            current = self.previous[current[0]][current[1]]
-        path.append(start)
-        return path[::-1]
+        return operations, path[::-1]
+
+    last_dir = [[(0, 0) for _ in range(len(grid[0]))] for _ in range(len(grid))]
+    start, goal = (start[0], start[1]), (goal[0], goal[1])
+
+    f_score = {start: math.sqrt((start[0] - goal[0])**2 + (start[1] - goal[1])**2)}
+    open_set = [(f_score[start], start)]
+    came_from = {}
+    g_score = {start: 0}
+    operations = 0
+
+    while open_set:
+        operations += 1
+        current = heapq.heappop(open_set)[1]
+        if current == goal:
+            return reconstruct_path(came_from, current, operations)
+        for n in prune(current, neighbours(current)):
+            g = g_score[current] + math.sqrt((n[0] - current[0])**2 + (n[1] - current[1])**2)
+            if n not in g_score or g < g_score[n]:
+                came_from[n] = current
+                g_score[n] = g
+                f_score[n] = g + math.sqrt((n[0] - goal[0])**2 + (n[1] - goal[1])**2)
+                if n not in [item[1] for item in open_set]:
+                    heapq.heappush(open_set, (f_score[n], n))
+    return None

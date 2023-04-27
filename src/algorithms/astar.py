@@ -78,7 +78,7 @@ class AStar:
         return self.get_path(start, end)
 
     def heuristic(self, node, end):
-        return abs(node[0] - end[0]) + abs(node[1] - end[1])
+        return math.sqrt((node[0] - end[0])**2 + (node[1] - end[1])**2)
 
 
     def is_valid(self, node):
