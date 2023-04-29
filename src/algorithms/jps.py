@@ -14,35 +14,23 @@ class JPS:
 
     def search(self, start, goal):
         self.distances[start[0]][start[1]] = 0
-        self.previous[start[0]][start[1]] = start
 
         heap = [(self.heuristic(start, goal), start)]
         while heap:
             self.operations += 1
-            
+            print(heap)
             current = heapq.heappop(heap)[1]
             if current == goal:
                 return self.get_path(start, goal), self.operations, self.visited
-            if not self.visited[current[0]][current[1]]:
-                self.visited[current[0]][current[1]] = True
-                neighbours = self.get_neighbours(current)
+            successors = self.get_successors(current, goal)
+            for successor in successors:
+                if not self.visited[successor[0]][successor[1]]:
+                    self.visited[successor[0]][successor[1]] = True
+                    self.previous[successor[0]][successor[1]] = current
+                    self.distances[successor[0]][successor[1]] = self.distances[current[0]][current[1]] + 1
+                    heapq.heappush(heap, (self.heuristic(successor, goal), successor))
 
-                for neighbour in neighbours:
-                    direction = self.get_direction(current, neighbour)
-                    jump_point = self.jump(neighbour, direction, goal)
-
-                    if jump_point is None:
-                        continue
-
-                    old_distance = self.distances[jump_point[0]][jump_point[1]]
-                    new_distance = self.distances[current[0]][current[1]] + self.get_jump_length(current, jump_point, direction)
-
-                    if new_distance < old_distance:
-                        self.distances[jump_point[0]][jump_point[1]] = new_distance
-                        self.previous[jump_point[0]][jump_point[1]] = current
-                        heapq.heappush(heap, (self.heuristic(jump_point, goal) + new_distance, jump_point))
-
-        return None
+        return None, None, None
 
     def jump(self, current, direction, goal):
         next_point =  (current[0] + direction[0], current[1] + direction[1])
@@ -76,91 +64,88 @@ class JPS:
                 return next_point
             
         return self.jump(next_point, direction, goal)
-    
+
     def get_neighbours(self, current):
         neighbours = []
-        y, x = current
-
-        prev = self.previous[y][x]
-
-        if prev is not None or prev is None:
-            for dy in range(-1, 2):
-                for dx in range(-1, 2):
-                    if dx == 0 and dy == 0:
-                        continue
-                    neighbour_y, neighbour_x = y + dy, x + dx
-                    if self.is_valid((neighbour_y, neighbour_x)):
-                        neighbours.append((neighbour_y, neighbour_x))
-                    else:
-                        if dx == 0:
-                            if self.is_valid((neighbour_y, neighbour_x + 1)):
-                                neighbours.append((neighbour_y, neighbour_x + 1))
-                            if self.is_valid((neighbour_y, neighbour_x - 1)):
-                                neighbours.append((neighbour_y, neighbour_x - 1))
-                        elif dy == 0:
-                            if self.is_valid((neighbour_y + 1, neighbour_x)):
-                                neighbours.append((neighbour_y + 1, neighbour_x))
-                            if self.is_valid((neighbour_y - 1, neighbour_x)):
-                                neighbours.append((neighbour_y - 1, neighbour_x))
+        prev = self.previous[current[0]][current[1]]
+        if prev is None:
+            for i, j in [(-1, 0),(0, -1),(1, 0),(0, 1),(-1, -1),(-1, 1),(1, -1),(1, 1)]:
+                if self.is_valid((current[0] + i, current[1] + j)):
+                    neighbours.append((current[0] + i, current[1] + j)) 
             return neighbours
         
-        direction = self.get_direction(prev, current)
-        dy, dx = direction[0], direction[1]
+        cur_y, cur_x = current
 
-        if dx == 0:
-            if self.is_valid((y + dy, x)):
-                neighbours.append((y + dy, x))
-            if not self.is_valid((y - dy, x - 1)):
-                if self.is_valid((y, x - 1)):
-                    neighbours.append((y, x - 1))
-                    if self.is_valid((y + dy, x)) and self.is_valid((y + dy, x - 1)):
-                        neighbours.append((y + dy, x - 1))
-            if not self.is_valid((y - dy, x + 1)):
-                if self.is_valid((y, x + 1)):
-                    neighbours.append((y, x + 1))
-                    if self.is_valid((y + dy, x)) and self.is_valid((y + dy, x + 1)):
-                        neighbours.append((y + dy, x + 1))
-        elif dy == 0:
-            if self.is_valid((y, x + dx)):
-                neighbours.append((y, x + dx))
-            if not self.is_valid((y - 1, x - dx)):
-                if self.is_valid((y - 1, x)):
-                    neighbours.append((y - 1, x))
-                    if self.is_valid((y, x + dx)) and self.is_valid((y - 1, x + dx)):
-                        neighbours.append((y - 1, x + dx))
-            if not self.is_valid((y + 1, x - dx)):
-                if self.is_valid((y + 1, x)):
-                    neighbours.append((y + 1, x))
-                    if self.is_valid((y, x + dx)) and self.is_valid((y + 1, x + dx)):
-                        neighbours.append((y + 1, x + dx))
+        dir_y, dir_x = self.get_direction(prev, current)
+
+        if dir_x == 0:
+            if self.is_valid((cur_y + dir_y, cur_x)):
+                neighbours.append((cur_y + dir_y, cur_x))
+            if not self.is_valid((cur_y - dir_y, cur_x - 1)):
+                if self.is_valid((cur_y, cur_x - 1)):
+                    neighbours.append((cur_y, cur_x - 1))
+                    if self.is_valid((cur_y + dir_y, cur_x)) and self.is_valid((cur_y + dir_y, cur_x - 1)):
+                        neighbours.append((cur_y + dir_y, cur_x - 1))
+            if not self.is_valid((cur_y - dir_y, cur_x + 1)):
+                if self.is_valid((cur_y, cur_x + 1)):
+                    neighbours.append((cur_y, cur_x + 1))
+                    if self.is_valid((cur_y + dir_y, cur_x)) and self.is_valid((cur_y + dir_y, cur_x + 1)):
+                        neighbours.append((cur_y + dir_y, cur_x + 1))
+
+        elif dir_y == 0:
+            if self.is_valid((cur_y, cur_x + dir_x)):
+                neighbours.append((cur_y, cur_x + dir_x))
+            if not self.is_valid((cur_y - 1, cur_x - dir_x)):
+                if self.is_valid((cur_y - 1, cur_x)):
+                    neighbours.append((cur_y - 1, cur_x))
+                    if self.is_valid((cur_y, cur_x + dir_x)) and self.is_valid((cur_y - 1, cur_x + dir_x)):
+                        neighbours.append((cur_y - 1, cur_x + dir_x))
+            if not self.is_valid((cur_y + 1, cur_x - dir_x)):
+                if self.is_valid((cur_y + 1, cur_x)):
+                    neighbours.append((cur_y + 1, cur_x))
+                    if self.is_valid((cur_y, cur_x + dir_x)) and self.is_valid((cur_y + 1, cur_x + dir_x)):
+                        neighbours.append((cur_y + 1, cur_x + dir_x))
+
         else:
-            if self.is_valid((y + dy, x + dx)):
-                neighbours.append((y + dy, x + dx))
-            if not self.is_valid((y, x + dx)):
-                if self.is_valid((y - dy, x)):
-                    neighbours.append((y - dy, x))
-                    if self.is_valid((y - dy, x + dx)) and self.is_valid((y - dy, x)):
-                        neighbours.append((y - dy, x + dx))
-                if self.is_valid((y + dy, x)):
-                    neighbours.append((y + dy, x))
-                    if self.is_valid((y + dy, x + dx)) and self.is_valid((y + dy, x)):
-                        neighbours.append((y + dy, x + dx))
+            if self.is_valid((cur_y + dir_y, cur_x)):
+                neighbours.append((cur_y + dir_y, cur_x))
+            if self.is_valid((cur_y, cur_x + dir_x)):
+                neighbours.append((cur_y, cur_x + dir_x))
+            if self.is_valid((cur_y + dir_y, cur_x)) and self.is_valid((cur_y, cur_x + dir_x)):
+                if self.is_valid((cur_y + dir_y, cur_x + dir_x)):
+                    neighbours.append((cur_y + dir_y, cur_x + dir_x))
 
         return neighbours
 
+    def get_successors(self, current, goal):
+        successors = []
+        neighbours = self.get_neighbours(current)
+        for node in neighbours:
+            jump_point = self.jump(current, node, goal)
+            
+            if jump_point is not None:
+                successors.append(jump_point)
 
-    def get_direction(self, current, neighbour):
-        return (neighbour[0] - current[0], neighbour[1] - current[1])
-    
+        return successors
+
+    def get_direction(self, prev, curr):
+        dir_y = int(math.copysign(1, curr[0] - prev[0]))
+        dir_x = int(math.copysign(1, curr[1] - prev[1]))
+        if prev[0] == curr[0]:
+            dir_y = 0
+        if prev[1] == curr[1]:
+            dir_x = 0
+        return (dir_y, dir_x)
+
     def get_distance(self, current, neighbour):
         return math.sqrt((current[0] - neighbour[0])**2 + (current[1] - neighbour[1])**2)
-    
+
     def is_valid(self, point):
         return 0 <= point[0] < len(self.matrix) and 0 <= point[1] < len(self.matrix[0]) and self.matrix[point[0]][point[1]] == 0
 
     def heuristic(self, current, goal):
         return math.sqrt((current[0] - goal[0])**2 + (current[1] - goal[1])**2)
-    
+
     def get_path(self, start, goal):
         path = []
         current = goal

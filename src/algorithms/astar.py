@@ -45,7 +45,7 @@ class AStar:
         self.directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]
         self.operations = 0
 
-    def a_star(self, start, end):
+    def search(self, start, end):
         self.distances[start[0]][start[1]] = 0
         self.previous[start[0]][start[1]] = start
 
@@ -55,9 +55,8 @@ class AStar:
             current = heapq.heappop(heap)[1]
             if current == end:
                 break
-            if self.visited[current[0]][current[1]]:
-                continue
-            self.visited[current[0]][current[1]] = True
+            if not self.visited[current[0]][current[1]]:
+                self.visited[current[0]][current[1]] = True
 
             for direction in self.directions:
                 neighbor = (current[0] + direction[0], current[1] + direction[1])
