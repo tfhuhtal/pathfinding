@@ -8,6 +8,10 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.8"
 coverage = "^7.2.2"
+numpy = "^1.24.3"
+invoke = "^2.1.0"
+image = "^1.5.33"
+autopep8 = "^2.0.2"
 
 
 [tool.poetry.group.dev.dependencies]

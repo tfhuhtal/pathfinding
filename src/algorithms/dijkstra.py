@@ -39,7 +39,7 @@ class Dijkstra:
         self.directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]
         self.operations = 0
 
-    def dijkstra(self, start, end):
+    def search(self, start, end):
         self.distances[start[0]][start[1]] = 0
         self.previous[start[0]][start[1]] = start
 
