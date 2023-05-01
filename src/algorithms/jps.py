@@ -1,5 +1,4 @@
 import math
-import time
 import heapq
 import numpy as np
 
@@ -27,8 +26,6 @@ class JPS:
 
         heapq.heappush(queue, (fscore[self.start], self.start))
 
-        starttime = time.time()
-
         while queue:
             operations += 1
 
@@ -40,8 +37,7 @@ class JPS:
                     current = previous[current]
                 res.append(self.start)
                 res = res[::-1]
-                endtime = time.time()
-                return (res, (endtime - starttime), operations)
+                return (res, operations)
 
             close_set.add(current)
 
@@ -63,8 +59,7 @@ class JPS:
                     gscore[jump_point] = tentative_g_score
                     fscore[jump_point] = tentative_g_score + self.heuristic(jump_point, self.goal)
                     heapq.heappush(queue, (fscore[jump_point], jump_point))
-            endtime = time.time()
-        return ([], (endtime - starttime), operations)
+        return (None, operations)
 
     #return jump points
     def jump(self, cur_x, cur_y, dir_x, dir_y):

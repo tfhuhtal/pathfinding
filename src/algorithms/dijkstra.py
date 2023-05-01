@@ -37,14 +37,14 @@ class Dijkstra:
         self.distances = [[float('inf')] * self.cols for _ in range(self.rows)]
         self.previous = [[None] * self.cols for _ in range(self.rows)]
         self.directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]
-        self.operations = 0
 
     def search(self, start, end):
         self.distances[start[0]][start[1]] = 0
         self.previous[start[0]][start[1]] = start
+        operations = 0
 
         while True:
-            self.operations += 1
+            operations += 1
             current = self.get_closest_node()
             if current is None:
                 break
@@ -61,7 +61,7 @@ class Dijkstra:
                         self.previous[neighbor[0]][neighbor[1]] = current
 
 
-        return self.get_path(start, end)
+        return self.get_path(start, end, operations)
 
     def get_closest_node(self):
         min_distance = float('inf')
@@ -79,12 +79,12 @@ class Dijkstra:
                 and not self.visited[node[0]][node[1]]
                 and self.maze[node[0]][node[1]] == 0)
 
-    def get_path(self, start, end):
+    def get_path(self, start, end, operations):
         path = []
         current = end
         while current != start:
             path.append(current)
             current = self.previous[current[0]][current[1]]
         path.append(start)
-        return path[::-1]
+        return path[::-1], operations
     

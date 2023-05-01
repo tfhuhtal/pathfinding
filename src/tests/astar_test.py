@@ -20,7 +20,8 @@ class TestAStar(unittest.TestCase):
         start = (0, 0)
         end = (3, 3)
         expected_path = [(0, 0), (0, 1), (1, 2), (2, 2), (3, 3)]
-        self.assertEqual(self.a_star.search(start, end), expected_path)
+        path, operations = self.a_star.search(start, end)
+        self.assertEqual(path, expected_path)
 
     def test_a_star_len(self):
         start = (3, 0)
@@ -31,7 +32,7 @@ class TestAStar(unittest.TestCase):
         start = (0, 0)
         end = (0, 0)
         expected_path = [(0, 0)]
-        self.assertEqual(self.a_star.search(start, end), expected_path)
+        self.assertEqual(self.a_star.search(start, end)[0], expected_path)
 
     def test_a_star_invalid_start_end(self):
         start = (-1, -1)
@@ -51,7 +52,9 @@ class TestAStar(unittest.TestCase):
         a_star = AStar(large_maze)
         start = (0, 0)
         end = (49, 49)
-        self.assertEqual(a_star.search(start, end), dijkstra.search(start, end))
+        path, opr = a_star.search(start, end)
+        path_d, opr = dijkstra.search(start, end)
+        self.assertEqual(path, path_d)
 
     def test_a_star_path(self):
         maze = [
@@ -71,7 +74,9 @@ class TestAStar(unittest.TestCase):
         a_star = AStar(maze)
         start = (0, 0)
         end = (9, 9)
-        self.assertEqual(dijkstra.search(start, end), a_star.search(start, end))
+        path, opr = a_star.search(start, end)
+        path_d, opr = dijkstra.search(start, end)
+        self.assertEqual(path, path_d)
 
     def test_a_star_path_rev(self):
         maze = [
@@ -91,10 +96,12 @@ class TestAStar(unittest.TestCase):
         a_star = AStar(maze)
         start = (9, 9)
         end = (0, 0)
-        self.assertEqual(dijkstra.search(start, end), a_star.search(start, end))
+        path, opr = a_star.search(start, end)
+        path_d, opr = dijkstra.search(start, end)
+        self.assertEqual(path, path_d)
 
     def test_operation_count(self):
         start = (0, 0)
         end = (3, 3)
-        self.a_star.search(start, end)
-        self.assertEqual(self.a_star.operations, 6)
+        path, operations = self.a_star.search(start, end)
+        self.assertEqual(operations, 6)

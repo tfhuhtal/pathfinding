@@ -26,14 +26,14 @@ class TestJPS(unittest.TestCase):
     def test_jps_no_path(self):
         start = (0, 0)
         end = (1, 3)
-        expected_path = []
+        expected_path = None
         result = self.jps.search(start, end)
         self.assertEqual(result[0], expected_path)
 
     def test_jps_invalid_start_and_end(self):
         start = (-1, -1)
         end = (4, 4)
-        expected_path = []
+        expected_path = None
         result = self.jps.search(start, end)
         self.assertEqual(result[0], expected_path)
 

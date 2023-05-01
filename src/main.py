@@ -1,7 +1,7 @@
 from time import time
-from PIL import Image, ImageDraw
+#from PIL import Image, ImageDraw
 from algorithms.astar import AStar
-#from algorithms.dijkstra import Dijkstra
+from algorithms.dijkstra import Dijkstra
 from algorithms.jps import JPS
 
 
@@ -17,8 +17,8 @@ def main():
     #end = (height//2 +170, width//2 + 125) #(height - 28, width//2 - 340)  # 
 
     maze = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
             [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
@@ -27,23 +27,18 @@ def main():
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
-    
+
     start = (0, 0)
     end = (9, 9)
 
-    #dijkstra = Dijkstra(maze)
+    dijkstra = Dijkstra(maze)
     astar = AStar(maze)
-    # dijkstra = Dijkstra(maze)
     jps = JPS(maze)
 
-    #start_time = time()
-    #path = dijkstra.search(start, end)
-    #end_time = time()
-    #opr = dijkstra.operations
-    #print(f"Dijkstra: {(end_time - start_time)*1000:.2f} ms ({opr} operations)")
-
-    path, oper_time, operations = jps.search(start, end)
-    print(f"JPS: {(oper_time)*1000:.2f} ms ({operations} operations)")
+    start_time = time()
+    path, operations = jps.search(start, end)
+    end_time = time()
+    print(f"JPS: {(end_time-start_time)*1000:.2f} ms ({operations} operations)")
 
     path = [(x, y) for y, x in path]
 
@@ -52,11 +47,14 @@ def main():
     #image.save("path_jps.png")
 
     start_time = time()
-    path = astar.search(start, end)
+    path, operations = astar.search(start, end)
     end_time = time()
-    opr = astar.operations
-    # print(path)
-    print(f"A*: {(end_time - start_time)*1000:.2f} ms ({opr} operations)")
+    print(f"A*: {(end_time - start_time)*1000:.2f} ms ({operations} operations)")
+
+    start_time = time()
+    path = dijkstra.search(start, end)
+    end_time = time()
+    print(f"Dijkstra: {(end_time - start_time)*1000:.2f} ms ({operations} operations)")
 
 
 if __name__ == "__main__":
