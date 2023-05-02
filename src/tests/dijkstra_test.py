@@ -1,10 +1,12 @@
 import unittest
 from algorithms.dijkstra import Dijkstra
 
+
 class TestDijkstra(unittest.TestCase):
     """
     Test the Dijkstra class
     """
+
     def setUp(self):
         self.maze = [
             [0, 0, 0, 0],

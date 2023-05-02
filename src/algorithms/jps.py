@@ -2,16 +2,17 @@ import math
 import heapq
 import numpy as np
 
+
 class JPS:
     """
     Jump Point Search algorithm
     """
+
     def __init__(self, matrix):
         self.matrix = np.array(matrix)
         self.operations = 0
         self.start = None
         self.goal = None
-
 
     def search(self, start, goal):
         self.start = start
@@ -51,17 +52,19 @@ class JPS:
                 if jump_point in close_set:
                     continue
 
-                tentative_g_score = gscore[current] + self.heuristic(current, jump_point)
+                tentative_g_score = gscore[current] + \
+                    self.heuristic(current, jump_point)
 
                 if (tentative_g_score < gscore.get(jump_point, 0)
-                    or jump_point not in [j[1] for j in queue]):
+                        or jump_point not in [j[1] for j in queue]):
                     previous[jump_point] = current
                     gscore[jump_point] = tentative_g_score
-                    fscore[jump_point] = tentative_g_score + self.heuristic(jump_point, self.goal)
+                    fscore[jump_point] = tentative_g_score + \
+                        self.heuristic(jump_point, self.goal)
                     heapq.heappush(queue, (fscore[jump_point], jump_point))
         return (None, operations)
 
-    #return jump points
+    # return jump points
     def jump(self, cur_x, cur_y, dir_x, dir_y):
 
         next_x = cur_x + dir_x
@@ -80,11 +83,11 @@ class JPS:
                 if (not self.blocked(temp_x, temp_y, -dir_x, dir_y)
                     and self.blocked(temp_x, temp_y, -dir_x, 0)
                     or not self.blocked(temp_x, temp_y, dir_x, -dir_y)
-                    and self.blocked(temp_x, temp_y, 0, -dir_y)):
+                        and self.blocked(temp_x, temp_y, 0, -dir_y)):
                     return (temp_x, temp_y)
 
                 if (self.jump(temp_x, temp_y, dir_x, 0) is not None
-                    or self.jump(temp_x, temp_y, 0, dir_y) is not None):
+                        or self.jump(temp_x, temp_y, 0, dir_y) is not None):
                     return (temp_x, temp_y)
 
                 temp_x += dir_x
@@ -94,7 +97,7 @@ class JPS:
                     return None
 
                 if (self.matrix[cur_x - dir_x][cur_y] == 1
-                    and self.matrix[cur_x][cur_y - dir_y] == 1):
+                        and self.matrix[cur_x][cur_y - dir_y] == 1):
                     return None
 
                 if (temp_x, temp_y) == self.goal:
@@ -105,7 +108,7 @@ class JPS:
                     if (not self.blocked(temp_x, next_y, dir_x, 1)
                         and self.blocked(temp_x, next_y, 0, 1)
                         or not self.blocked(temp_x, next_y, dir_x, -1)
-                        and self.blocked(temp_x, next_y, 0, -1)):
+                            and self.blocked(temp_x, next_y, 0, -1)):
                         return (temp_x, next_y)
 
                     temp_x += dir_x
@@ -121,7 +124,7 @@ class JPS:
                     if (not self.blocked(next_x, temp_y, 1, dir_y)
                         and self.blocked(next_x, temp_y, 1, 0)
                         or not self.blocked(next_x, temp_y, -1, dir_y)
-                        and self.blocked(next_x, temp_y, -1, 0)):
+                            and self.blocked(next_x, temp_y, -1, 0)):
                         return (next_x, temp_y)
 
                     temp_y += dir_y
@@ -134,12 +137,12 @@ class JPS:
 
         return self.jump(next_x, next_y, dir_x, dir_y)
 
-    #return all possible neighbours of node
+    # return all possible neighbours of node
     def get_neighbours(self, cur_x, cur_y, parent):
         neighbours = []
         if parent == 0:
-            for i, j in [(-1, 0),(0, -1),(1, 0),(0, 1),
-                        (-1, -1),(-1, 1),(1, -1),(1, 1)]:
+            for i, j in [(-1, 0), (0, -1), (1, 0), (0, 1),
+                         (-1, -1), (-1, 1), (1, -1), (1, 1)]:
                 if not self.blocked(cur_x, cur_y, i, j):
                     neighbours.append((cur_x + i, cur_y + j))
 
@@ -152,14 +155,14 @@ class JPS:
             if not self.blocked(cur_x, cur_y, dir_x, 0):
                 neighbours.append((cur_x + dir_x, cur_y))
             if (not self.blocked(cur_x, cur_y, 0, dir_y)
-                or not self.blocked(cur_x, cur_y, dir_x, 0))\
-                and not self.blocked(cur_x, cur_y, dir_x, dir_y):
+                    or not self.blocked(cur_x, cur_y, dir_x, 0))\
+                    and not self.blocked(cur_x, cur_y, dir_x, dir_y):
                 neighbours.append((cur_x + dir_x, cur_y + dir_y))
             if self.blocked(cur_x, cur_y, -dir_x, 0)\
-                and not self.blocked(cur_x, cur_y, 0, dir_y):
+                    and not self.blocked(cur_x, cur_y, 0, dir_y):
                 neighbours.append((cur_x - dir_x, cur_y + dir_y))
             if self.blocked(cur_x, cur_y, 0, -dir_y)\
-                and not self.blocked(cur_x, cur_y, dir_x, 0):
+                    and not self.blocked(cur_x, cur_y, dir_x, 0):
                 neighbours.append((cur_x + dir_x, cur_y - dir_y))
 
         else:
@@ -182,10 +185,12 @@ class JPS:
                         neighbours.append((cur_x + dir_x, cur_y - 1))
         return neighbours
 
-    #return all possible successors of the current node
+    # return all possible successors of the current node
     def get_successors(self, cur_x, cur_y, previous):
         successors = []
-        neighbours = self.get_neighbours(cur_x, cur_y, previous.get((cur_x, cur_y), 0))
+        neighbours = self.get_neighbours(
+            cur_x, cur_y, previous.get(
+                (cur_x, cur_y), 0))
 
         for node in neighbours:
             dir_x = node[0] - cur_x
@@ -198,14 +203,16 @@ class JPS:
 
         return successors
 
-    #check if the node is blocked, which means it is an obstacle or out of the map
+    # check if the node is blocked, which means it is an obstacle or out of
+    # the map
     def blocked(self, cur_x, cur_y, dir_x, dir_y):
         max_x, max_y = self.matrix.shape
         next_x, next_y = cur_x + dir_x, cur_y + dir_y
         if not 0 <= next_x < max_x or not 0 <= next_y < max_y:
             return True
         if dir_x != 0 and dir_y != 0:
-            if self.matrix[cur_x + dir_x, cur_y] == 1 and self.matrix[cur_x, cur_y + dir_y] == 1:
+            if self.matrix[cur_x + dir_x,
+                           cur_y] == 1 and self.matrix[cur_x, cur_y + dir_y] == 1:
                 return True
             if self.matrix[cur_x + dir_x, cur_y + dir_y] == 1:
                 return True
@@ -218,7 +225,7 @@ class JPS:
                     return True
         return False
 
-    #returns the direction of the jump
+    # returns the direction of the jump
     def get_direction(self, cur_x, cur_y, point_x, point_y):
         dir_x = int(math.copysign(1, cur_x - point_x))
         dir_y = int(math.copysign(1, cur_y - point_y))
@@ -228,6 +235,6 @@ class JPS:
             dir_y = 0
         return (dir_x, dir_y)
 
-
     def heuristic(self, node1, node2):
-        return math.sqrt((node2[0] - node1[0]) ** 2 + (node2[1] - node1[1]) ** 2)
+        return math.sqrt((node2[0] - node1[0]) ** 2 +
+                         (node2[1] - node1[1]) ** 2)

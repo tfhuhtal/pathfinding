@@ -2,10 +2,12 @@ import unittest
 from algorithms.jps import JPS
 from algorithms.astar import AStar
 
+
 class TestJPS(unittest.TestCase):
     """
     Test the Jump Point Search class
     """
+
     def setUp(self):
         self.maze = [
             [0, 0, 0, 0],
@@ -22,7 +24,7 @@ class TestJPS(unittest.TestCase):
         expected_path = [(0, 0), (0, 1), (1, 2), (2, 3), (3, 3)]
         result = self.jps.search(start, end)
         self.assertEqual(result[0], expected_path)
-    
+
     def test_jps_no_path(self):
         start = (0, 0)
         end = (1, 3)
@@ -63,7 +65,7 @@ class TestJPS(unittest.TestCase):
         end = (9, 9)
         expected_path = [(0, 0), (0, 5), (1, 6), (2, 5),
                          (2, 1), (3, 0), (7, 0), (8, 1),
-                         (8, 6), (8, 8),(9, 9)]
+                         (8, 6), (8, 8), (9, 9)]
         result = jps.search(start, end)
         self.assertEqual(result[0], expected_path)
 

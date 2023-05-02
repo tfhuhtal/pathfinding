@@ -1,6 +1,7 @@
 import heapq
 import math
 
+
 class AStar:
     """
     Algorithm:
@@ -24,7 +25,7 @@ class AStar:
 
     5. If the destination node has been visited (when planning a route between two specific nodes)
     or if the smallest tentative f value among the nodes in the unvisited set is infinity
-    (when planning a complete traversal),then stop. The algorithm has finished. 
+    (when planning a complete traversal),then stop. The algorithm has finished.
 
     6. Otherwise, select the unvisited node that is marked with the smallest tentative f value,
     and set it as the new "current node" then go back to step 3.
@@ -42,7 +43,8 @@ class AStar:
         self.visited = [[False] * self.cols for _ in range(self.rows)]
         self.distances = [[float('inf')] * self.cols for _ in range(self.rows)]
         self.previous = [[None] * self.cols for _ in range(self.rows)]
-        self.directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+        self.directions = [(0, 1), (0, -1), (1, 0), (-1, 0),
+                           (-1, -1), (-1, 1), (1, -1), (1, 1)]
 
     def search(self, start, end):
         self.distances[start[0]][start[1]] = 0
@@ -59,14 +61,18 @@ class AStar:
                 self.visited[current[0]][current[1]] = True
 
             for direction in self.directions:
-                neighbor = (current[0] + direction[0], current[1] + direction[1])
+                neighbor = (
+                    current[0] + direction[0],
+                    current[1] + direction[1])
                 if self.is_valid(neighbor):
-                    if direction in [(1,1), (1,-1), (-1,1), (-1,-1)]:
+                    if direction in [(1, 1), (1, -1), (-1, 1), (-1, -1)]:
                         # Diagonal movement, distance is sqrt(2)
-                        new_distance = self.distances[current[0]][current[1]] + math.sqrt(2)
+                        new_distance = self.distances[current[0]
+                                                      ][current[1]] + math.sqrt(2)
                     else:
                         # Horizontal/Vertical movement, distance is 1
-                        new_distance = self.distances[current[0]][current[1]] + 1
+                        new_distance = self.distances[current[0]
+                                                      ][current[1]] + 1
 
                     if new_distance < self.distances[neighbor[0]][neighbor[1]]:
                         self.distances[neighbor[0]][neighbor[1]] = new_distance
@@ -78,7 +84,6 @@ class AStar:
 
     def heuristic(self, node, end):
         return math.sqrt((node[0] - end[0])**2 + (node[1] - end[1])**2)
-
 
     def is_valid(self, node):
         return (0 <= node[0] < self.rows

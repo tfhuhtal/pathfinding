@@ -2,10 +2,12 @@ import unittest
 from algorithms.dijkstra import Dijkstra
 from algorithms.astar import AStar
 
+
 class TestAStar(unittest.TestCase):
     """
     Test the A-star class
     """
+
     def setUp(self):
         self.maze = [
             [0, 0, 0, 0],
@@ -26,7 +28,8 @@ class TestAStar(unittest.TestCase):
     def test_a_star_len(self):
         start = (3, 0)
         end = (0, 0)
-        self.assertEqual(len(self.a_star.search(start, end)), len(self.dijkstra.search(start, end)))
+        self.assertEqual(len(self.a_star.search(start, end)),
+                         len(self.dijkstra.search(start, end)))
 
     def test_a_star_same_start_end(self):
         start = (0, 0)

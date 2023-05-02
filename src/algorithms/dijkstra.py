@@ -1,5 +1,6 @@
 import math
 
+
 class Dijkstra:
     """
     Algorithm:
@@ -7,7 +8,7 @@ class Dijkstra:
     2. Assign to every node a tentative distance value: set it to zero for our initial node
        and to infinity for all other nodes. Set the initial node as current.
     3. For the current node, consider all of its unvisited neighbors
-       and calculate their tentative distances through the current node. 
+       and calculate their tentative distances through the current node.
        Compare the newly calculated tentative distance
        to the current assigned value and assign the smaller one.
        For example, if the current node A is marked with a distance of 6,
@@ -36,7 +37,8 @@ class Dijkstra:
         self.visited = [[False] * self.cols for _ in range(self.rows)]
         self.distances = [[float('inf')] * self.cols for _ in range(self.rows)]
         self.previous = [[None] * self.cols for _ in range(self.rows)]
-        self.directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+        self.directions = [(0, 1), (0, -1), (1, 0), (-1, 0),
+                           (-1, -1), (-1, 1), (1, -1), (1, 1)]
 
     def search(self, start, end):
         self.distances[start[0]][start[1]] = 0
@@ -50,16 +52,19 @@ class Dijkstra:
                 break
             self.visited[current[0]][current[1]] = True
             for direction in self.directions:
-                neighbor = (current[0] + direction[0], current[1] + direction[1])
+                neighbor = (
+                    current[0] + direction[0],
+                    current[1] + direction[1])
                 if self.is_valid(neighbor):
                     if direction in [(1, 1), (1, -1), (-1, 1), (-1, -1)]:
-                        new_distance = self.distances[current[0]][current[1]] + math.sqrt(2)
+                        new_distance = self.distances[current[0]
+                                                      ][current[1]] + math.sqrt(2)
                     else:
-                        new_distance = self.distances[current[0]][current[1]] + 1
+                        new_distance = self.distances[current[0]
+                                                      ][current[1]] + 1
                     if new_distance < self.distances[neighbor[0]][neighbor[1]]:
                         self.distances[neighbor[0]][neighbor[1]] = new_distance
                         self.previous[neighbor[0]][neighbor[1]] = current
-
 
         return self.get_path(start, end, operations)
 
@@ -87,4 +92,3 @@ class Dijkstra:
             current = self.previous[current[0]][current[1]]
         path.append(start)
         return path[::-1], operations
-    
