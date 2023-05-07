@@ -4,36 +4,7 @@ import math
 
 class AStar:
     """
-    Algorithm:
-    1. Mark all nodes unvisited. Create a set of all the unvisited nodes called the unvisited set.
-
-    2. Assign to every node a tentative distance value: set it to zero for our initial node and to
-    infinity for all other nodes. Also, calculate a heuristic function h(n) for each node n, which
-    estimates the distance from node n to the goal node. Set the initial node as current.
-
-    3. For the current node, consider all of its unvisited neighbors and calculate their tentative
-    distances through the current node. Add the heuristic value of each neighbor to the tentative
-    distance to create a new value called f(n) for each neighbor n. Compare the newly calculated
-    f(n) value to the current assigned f(n) value and assign the smaller one. For example, if the
-    current node A is marked with a distance of 6 and the edge connecting it with a neighbor B has
-    length 2, and the heuristic function h(B) returns 3, then the f value of B through A will be
-    6 + 2 + 3 = 11. If B was previously marked with a f value greater than 11, then change it to 11.
-    Otherwise, keep the current value.
-
-    4. When we are done considering all of the neighbors of the current node, mark the current node
-    as visited and remove it from the unvisited set. A visited node will never be checked again.
-
-    5. If the destination node has been visited (when planning a route between two specific nodes)
-    or if the smallest tentative f value among the nodes in the unvisited set is infinity
-    (when planning a complete traversal),then stop. The algorithm has finished.
-
-    6. Otherwise, select the unvisited node that is marked with the smallest tentative f value,
-    and set it as the new "current node" then go back to step 3.
-
-    The algorithm will terminate when either the goal node has been visited or there are no more
-    nodes left to visit in the unvisited set. The resulting path can be reconstructed by starting
-    at the goal node and following the path of nodes with the lowest tentative f value back to the
-    initial node.
+    A* algorithm
     """
 
     def __init__(self, maze):
@@ -82,15 +53,18 @@ class AStar:
 
         return self.get_path(start, end, operations)
 
+    # return heuristic value of node
     def heuristic(self, node, end):
         return math.sqrt((node[0] - end[0])**2 + (node[1] - end[1])**2)
 
+    # return True if node is valid
     def is_valid(self, node):
         return (0 <= node[0] < self.rows
                 and 0 <= node[1] < self.cols
                 and not self.visited[node[0]][node[1]]
                 and self.maze[node[0]][node[1]] == 0)
 
+    # return path and number of operations
     def get_path(self, start, end, operations):
         path = []
         current = end

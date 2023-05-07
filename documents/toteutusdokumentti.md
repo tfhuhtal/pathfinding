@@ -1,100 +1,34 @@
 # Toteutusdokumentti
 
-## Yleistä
+## Ohjelman yleisrakenne
 
-Toteutusdokumentti on osa kurssin [tiralabra](https://tiralabra.github.io/2023_p4/) harjoitustyötä. Toteutusdokumentti on tarkoitettu ohjaajille ja muille tarkastajille, jotka haluavat tutustua sovelluksen toteutukseen. Dokumentti on kirjoitettu suomeksi.
+![image info](./images/structure.png)
 
-## Sovelluksen tarkoitus
-
-Sovelluksen tarkoitus on vertailla eri polkujen etsintä algoritmeja. Sovellus on toteutettu Python-ohjelmointikielellä ja se on tarkoitettu käytettäväksi komentoriviltä. Sovelluksen käyttöliittymä on tekstipohjainen.
-
-## Sovelluksen käyttö
-
-Sovelluksen käynnistämiseksi suoritetaan komento `python3 main.py`. Sovelluksen syötteenä kelpaa myös tiedoston nimi, joka sisältää kartan. Tällöin sovellus tulostaa polun ja sen pituuden. Tiedoston tulee olla samassa kansiossa kuin sovellus.
-
-## Sovelluksen toteutus
-
-Sovellus on toteutettu Python-ohjelmointikielellä. Sovelluksen toteutus on jaettu kahteen osaan: algoritmien toteutus ja käyttöliittymä. 
+- Algorithms kansio sisältää algoritmien toteutukset (Dijkstra, A*, JPS). 
+- Tests kansio sisältää algoritmien yksikkötestit.
+- main.py sisältää käyttöliittymän. 
 
 ## Algoritmien toteutus
 
+Algoritmit on toteutettu käyttäen Pythonin listoja ja sanakirjoja. Algoritmit käyttävät apunaan Pythonin heapq kirjastoa, joka on toteutettu binäärikekona. Lisäksi JPS-luokassa on käytetty NumPy-kirjastoa, joka on toteutettu C-kielellä ja on nopeampi kuin Pythonin listat ja sanakirjat.
+
 ### Dijkstran lyhimmänpolun algoritmi:
-- algoritmin aikavaativuus on O(|V|^2), missä V on solmujen määrä.
-
-```python
-def dijkstra(self, start, end):
-        self.distances[start[0]][start[1]] = 0
-        self.previous[start[0]][start[1]] = start
-
-        while True:
-            self.operations += 1
-            current = self.get_closest_node()
-            if current is None:
-                break
-            self.visited[current[0]][current[1]] = True
-            for direction in self.directions:
-                neighbor = (current[0] + direction[0], current[1] + direction[1])
-                if self.is_valid(neighbor):
-                    if direction in [(1, 1), (1, -1), (-1, 1), (-1, -1)]:
-                        new_distance = self.distances[current[0]][current[1]] + math.sqrt(2)
-                    else:
-                        new_distance = self.distances[current[0]][current[1]] + 1
-                    if new_distance < self.distances[neighbor[0]][neighbor[1]]:
-                        self.distances[neighbor[0]][neighbor[1]] = new_distance
-                        self.previous[neighbor[0]][neighbor[1]] = current
-                        self.operations += 1
-
-
-        return self.get_path(start, end)
-```
+- algoritmin aikavaativuus on O(n + m log n), missä n on solmujen määärä ja m on kaarien määrä. [1]
 
 ### A*-algoritmi:
-- huonoimmassa tapauksessa A* tekee yhtä monta operaatiota kuin Dijkstran algoritmi, mutta keskimäärin A* tekee paljon vähemmän operaatioita.
+- huonoimmassa tapauksessa A* tekee yhtä monta operaatiota kuin Dijkstran algoritmi, mutta keskimäärin A* tekee paljon vähemmän operaatioita. Tämä perustuu siihen että A* käyttää heuristiikkaa, joka ohjaa algoritmia kohti maalia. Keosta poistetaan aina pienin arvo, joka on heuristiikan ja etäisyyden summa. Tämä tarkoittaa sitä, että algoritmi käy ensin läpi solmut, jotka ovat lähellä maalia. Tässä toteutuksessa heurestiikka on eukliidinen. [2]
 
-```python
-def a_star(self, start, end):
-        self.distances[start[0]][start[1]] = 0
-        self.previous[start[0]][start[1]] = start
-
-        heap = [(self.heuristic(start, end), start)]
-        while heap:
-            self.operations += 1
-            current = heapq.heappop(heap)[1]
-            if current == end:
-                break
-            if self.visited[current[0]][current[1]]:
-                continue
-            self.visited[current[0]][current[1]] = True
-
-            for direction in self.directions:
-                neighbor = (current[0] + direction[0], current[1] + direction[1])
-                if self.is_valid(neighbor):
-                    if direction in [(1,1), (1,-1), (-1,1), (-1,-1)]:
-                        # Diagonal movement, distance is sqrt(2)
-                        new_distance = self.distances[current[0]][current[1]] + math.sqrt(2)
-                    else:
-                        # Horizontal/Vertical movement, distance is 1
-                        new_distance = self.distances[current[0]][current[1]] + 1
-    
-                    if new_distance < self.distances[neighbor[0]][neighbor[1]]:
-                        self.distances[neighbor[0]][neighbor[1]] = new_distance
-                        self.previous[neighbor[0]][neighbor[1]] = current
-                        heapq.heappush(heap, (self.heuristic(neighbor, end) + new_distance, neighbor))
-
-        return self.get_path(start, end)
-```
-
-### Jps-algoritmi:
-- JPS-algoritmin aikavaativuus on O(b^d), missä b on solmujen määrä ja d on syvyys.
+### Jump Point Search -algoritmi (JPS):
+- JPS-algoritmin on toteutettu perustuen artikkeliin [3]. JPS käyttää tässä toteutuksessa samaa heurestiikkaa kuin A* algoritmi. JPS-algoritmi on nopeampi kuin A* algoritmi, koska se hyppää yli solmuja, mitkä eivät ole osa polkua. JPS-algoritmi ei hae aina lyhintä polkua vaan optimaalisen reitin. [3]
 
 ## Käyttöliittymä
 
-Käyttöliittymää ei ole vielä toteutettu.
+Käyttöliittymää on komentoriviltä ajettava yksinkertainen toteutus. Voit valita 9 eri kartasta missä haluat etsiä lyhimmän polun. Voit valita kartan kirjoittamalla sen nimen. Tulos näytetään kartalla, missä vihreä on este, punainen on A* algoritmin löytämä polku ja sininen on JPS algoritmin löytämä polku. A* algoritmin löytämä polku on myös lyhin polku.
 
 ## Lähteet
 
-[1] [Dijkstran algoritmi](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
+[1] Dijkstra (3.3.2023). [Wikipedia](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm), luettu 19.3.2023. 
 
-[2] [A* algoritmi](https://en.wikipedia.org/wiki/A*_search_algorithm)
+[2] A-star (27.2.2023). [Wikipedia](https://en.wikipedia.org/wiki/A*_search_algorithm), luettu 19.3.2023.
 
-[3] [JPS algoritmi](https://en.wikipedia.org/wiki/Jump_point_search)
+[3] D. Harabor & A. Grastien (2012). [JPS](http://users.cecs.anu.edu.au/~dharabor/data/papers/harabor-grastien-aaai11.pdf), luettu 20.4.2023.

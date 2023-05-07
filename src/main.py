@@ -1,61 +1,87 @@
 from time import time
-# from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw
 from algorithms.astar import AStar
 from algorithms.dijkstra import Dijkstra
 from algorithms.jps import JPS
 
-
 def main():
-    # image = Image.open("map2.png")
-    # pixels = image.load()
-    # width, height = image.size
-    # matrix = [[pixels[j, i] for j in range(width)] for i in range(height)]
-    # maze = [[0 if matrix[i][j] == (229, 229, 229, 255)
-    #         else 1 for j in range(width)] for i in range(height)]
-    #
-    # start = (height//9, width//4) #(height//9 + 60, width//2 - 155)  #
-    # end = (height//2 +170, width//2 + 125) #(height - 28, width//2 - 340)  #
+    maps = ['map1', 'map2', 'map3', 'map4', 'map5', 'map6', 'map7', 'map8', 'map9']
+    starts = [(170, 383), (605, 930), (535, 59),
+              (92, 655), (157, 51), (71, 377),
+              (58, 541), (495, 640), (746, 399)
+        ]
+    ends = [(589, 253), (9, 220), (531, 1034),
+            (930, 393), (168, 900), (937, 679),
+            (687, 691), (568, 974), (28, 542)
+        ]
 
-    maze = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-            [0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            ]
+    print("Welcome to the Pathfinding Visualizer!")
+    while True:
+        try:
+            map_name = input("Choose the map you want to use (map1 - map9): ")
+            if map_name in ['map1', 'map2', 'map3', 'map4', 'map5', 'map6', 'map7', 'map8', 'map9']:
+                break
+            else:
+                print("Invalid map number. Please try again.")
+        except ValueError:
+            map_name = 'map1'
+            break
 
-    start = (0, 0)
-    end = (9, 9)
+    image = Image.open(f"maps/{map_name}.png")
+    pixels = image.load()
+    width, height = image.size
+    matrix = ([[0 if pixels[i, j] == (229, 229, 229, 255) else 1 for i in range(height)]
+             for j in range(width)])
 
-    dijkstra = Dijkstra(maze)
-    astar = AStar(maze)
-    jps = JPS(maze)
+    jps = JPS(matrix)
+    astar = AStar(matrix)
+    dijkstra = Dijkstra(matrix)
 
-    start_time = time()
-    path, operations = jps.search(start, end)
-    end_time = time()
-    print(f"JPS: {(end_time-start_time)*1000:.2f} ms ({operations} operations)")
+    start = None
+    end = None
 
-    path = [(x, y) for y, x in path]
+    for i,j in enumerate(maps):
+        if map_name == maps[i]:
+            start = starts[i]
+            end = ends[i]
+            break
 
-    # draw = ImageDraw.Draw(image)
-    # draw.line(path, fill=(255, 0, 0), width=2)
-    # image.save("path_jps.png")
+    jps_start = time()
+    jps_path, opr = jps.search(start, end)
+    jps_end = time()
+    jps_time = jps_end - jps_start
+    print(f"JPS: {(jps_time)*1000:.2f} ms, {opr} operations, path length: {len(jps_path)}")
 
-    start_time = time()
-    path, operations = astar.search(start, end)
-    end_time = time()
-    print(f"A*: {(end_time - start_time)*1000:.2f} ms ({operations} operations)")
+    jps_path = [(j, i) for i, j in jps_path]
 
-    start_time = time()
-    path = dijkstra.search(start, end)
-    end_time = time()
-    print(
-        f"Dijkstra: {(end_time - start_time)*1000:.2f} ms ({operations} operations)")
+    draw = ImageDraw.Draw(image)
+    draw.line(jps_path, fill=(255, 0, 0, 255), width=2)
+
+    astar_start = time()
+    astar_path, opr = astar.search(start, end)
+    astar_end = time()
+    astar_time = astar_end - astar_start
+    print(f"A*: {(astar_time)*1000:.2f} ms, {opr} operations, path length: {astar.distances[end[0]][end[1]]}")
+
+    astar_path = [(j, i) for i, j in astar_path]
+
+    draw = ImageDraw.Draw(image)
+    draw.line(astar_path, fill=(0, 0, 255, 255), width=2)
+
+    image.save(f"maps/{map_name}_result.png")
+
+    dijkstra_start = time()
+    dijkstra_path, opr = dijkstra.search(start, end)
+    dijkstra_end = time()
+    dijkstra_time = dijkstra_end - dijkstra_start
+    print(f"Dijkstra: {(dijkstra_time)*1000:.2f} ms,{opr} operations, path length: {dijkstra.distances[end[0]][end[1]]}")
+
+    dijkstra_path = [(j, i) for i, j in dijkstra_path]
+
+    draw = ImageDraw.Draw(image)
+    draw.line(dijkstra_path, fill=(0, 255, 0, 255), width=1)
+
+    image.save(f"maps/{map_name}_result.png")
 
 
 if __name__ == "__main__":

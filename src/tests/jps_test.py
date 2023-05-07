@@ -1,4 +1,5 @@
 import unittest
+from PIL import Image
 from algorithms.jps import JPS
 from algorithms.astar import AStar
 
@@ -69,11 +70,17 @@ class TestJPS(unittest.TestCase):
         result = jps.search(start, end)
         self.assertEqual(result[0], expected_path)
 
-    def test_jps_path2(self):
-        large_maze = [[0] * 50 for _ in range(50)]
-        jps = JPS(large_maze)
-        start = (0, 0)
-        end = (49, 49)
-        expected_path = [(0, 0), (49, 49)]
-        result = jps.search(start, end)
-        self.assertEqual(result[0], expected_path)
+    def test_jps_massive(self):
+        image = Image.open("maps/map1.png")
+        pixels = image.load()
+        width, height = image.size
+        matrix = ([[0 if pixels[i, j] == (229, 229, 229, 255) else 1 for i in range(height)]
+             for j in range(width)])
+
+        start = (170, 383)
+        end = (589, 253)
+
+        jps = JPS(matrix)
+
+        path = jps.search(start, end)
+        self.assertEqual(len(path[0]), 31)

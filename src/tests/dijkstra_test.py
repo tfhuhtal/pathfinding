@@ -20,23 +20,7 @@ class TestDijkstra(unittest.TestCase):
         start = (0, 0)
         end = (3, 3)
         expected_path = [(0, 0), (0, 1), (1, 2), (2, 2), (3, 3)]
-        self.assertEqual(self.dijkstra.search(start, end), (expected_path, 12))
-
-    def test_get_closest_node(self):
-        self.dijkstra.distances = [
-            [0, 1, 2, 3],
-            [float('inf'), float('inf'), 3, float('inf')],
-            [4, 3, 2, 1],
-            [5, float('inf'), float('inf'), 2]
-        ]
-        self.dijkstra.visited = [
-            [True, True, True, True],
-            [False, False, True, False],
-            [True, True, True, False],
-            [True, False, False, False]
-        ]
-        expected_node = (2, 3)
-        self.assertEqual(self.dijkstra.get_closest_node(), expected_node)
+        self.assertEqual(self.dijkstra.search(start, end), (expected_path, 10))
 
     def test_dijkstra_no_path(self):
         start = (0, 0)
@@ -48,7 +32,7 @@ class TestDijkstra(unittest.TestCase):
         start = (0, 0)
         end = (0, 0)
         expected_path = [(0, 0)]
-        self.assertEqual(self.dijkstra.search(start, end), (expected_path, 12))
+        self.assertEqual(self.dijkstra.search(start, end), (expected_path, 1))
 
     def test_dijkstra_invalid_start_end(self):
         start = (-1, -1)
@@ -68,7 +52,7 @@ class TestDijkstra(unittest.TestCase):
         start = (0, 0)
         end = (49, 49)
         expected_path = [(0, 0)] + [(i, i) for i in range(1, 50)]
-        self.assertEqual(dijkstra.search(start, end), (expected_path, 2501))
+        self.assertEqual(dijkstra.search(start, end), (expected_path, 2564))
 
     def test_dijkstra_large_maze_all_directions(self):
         maze = [
@@ -96,10 +80,10 @@ class TestDijkstra(unittest.TestCase):
             (3, 8), (4, 8), (5, 8), (6, 8),
             (7, 8), (8, 8), (9, 9)
         ]
-        self.assertEqual(dijkstra.search(start, end), (expected_path, 77))
+        self.assertEqual(dijkstra.search(start, end), (expected_path, 80))
 
     def test_operation_count(self):
         start = (0, 0)
         end = (3, 3)
         path, operations = self.dijkstra.search(start, end)
-        self.assertEqual(operations, 12)
+        self.assertEqual(operations, 10)
