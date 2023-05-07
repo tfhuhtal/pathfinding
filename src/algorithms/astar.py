@@ -72,4 +72,11 @@ class AStar:
             path.append(current)
             current = self.previous[current[0]][current[1]]
         path.append(start)
+        self.reset()
         return path[::-1], operations
+
+    # reset the algorithm
+    def reset(self):
+        self.visited = [[False] * self.cols for _ in range(self.rows)]
+        self.distances = [[float('inf')] * self.cols for _ in range(self.rows)]
+        self.previous = [[None] * self.cols for _ in range(self.rows)]

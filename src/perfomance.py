@@ -79,7 +79,8 @@ def main():
 
     print(f"JPS: {(jps_full)*1000:.2f} ms, {jps_ops} operations")
     print(f"A*: {(astar_full)*1000:.2f} ms, {astar_ops} operations")
-    print(f"Dijkstra: {(dijkstra_full)*1000:.2f} ms, {dijkstra_ops} operations")
+    print(
+        f"Dijkstra: {(dijkstra_full)*1000:.2f} ms, {dijkstra_ops} operations")
 
 
 if __name__ == '__main__':

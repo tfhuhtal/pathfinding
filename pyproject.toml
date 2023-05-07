@@ -12,6 +12,7 @@ numpy = "^1.24.3"
 invoke = "^2.1.0"
 image = "^1.5.33"
 autopep8 = "^2.0.2"
+pygame = "^2.4.0"
 
 
 [tool.poetry.group.dev.dependencies]

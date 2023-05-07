@@ -1,25 +1,32 @@
 from time import time
-from PIL import Image, ImageDraw
+import pygame
+from PIL import Image
 from algorithms.astar import AStar
 from algorithms.dijkstra import Dijkstra
 from algorithms.jps import JPS
 
-def main():
-    maps = ['map1', 'map2', 'map3', 'map4', 'map5', 'map6', 'map7', 'map8', 'map9']
-    starts = [(170, 383), (605, 930), (535, 59),
-              (92, 655), (157, 51), (71, 377),
-              (58, 541), (495, 640), (746, 399)
-        ]
-    ends = [(589, 253), (9, 220), (531, 1034),
-            (930, 393), (168, 900), (937, 679),
-            (687, 691), (568, 974), (28, 542)
-        ]
 
-    print("Welcome to the Pathfinding Visualizer!")
+def main():
+    maps = [
+        'map1',
+        'map2',
+        'map3',
+        'map4',
+        'map5',
+        'map6',
+        'map7',
+        'map8',
+        'map9']
+
+    print("Welcome to the Pathfinding Visualizer!"
+          + "\nRight click to place the start and end points."
+          + "\nPress 'd' to use Dijkstra's algorithm."
+          + "\nPress 'a' to use A* algorithm."
+          + "\nPress 'j' to use JPS algorithm.")
     while True:
         try:
             map_name = input("Choose the map you want to use (map1 - map9): ")
-            if map_name in ['map1', 'map2', 'map3', 'map4', 'map5', 'map6', 'map7', 'map8', 'map9']:
+            if map_name in maps:
                 break
             else:
                 print("Invalid map number. Please try again.")
@@ -31,7 +38,7 @@ def main():
     pixels = image.load()
     width, height = image.size
     matrix = ([[0 if pixels[i, j] == (229, 229, 229, 255) else 1 for i in range(height)]
-             for j in range(width)])
+               for j in range(width)])
 
     jps = JPS(matrix)
     astar = AStar(matrix)
@@ -40,48 +47,98 @@ def main():
     start = None
     end = None
 
-    for i,j in enumerate(maps):
-        if map_name == maps[i]:
-            start = starts[i]
-            end = ends[i]
-            break
+    pygame.init()
+    pygame.display.set_caption("Pathfinding Visualizer")
+    screen = pygame.display.set_mode((width, height))
+    screen.fill((255, 255, 255))
 
-    jps_start = time()
-    jps_path, opr = jps.search(start, end)
-    jps_end = time()
-    jps_time = jps_end - jps_start
-    print(f"JPS: {(jps_time)*1000:.2f} ms, {opr} operations, path length: {len(jps_path)}")
+    PATH_COLOR = (255, 0, 0)
+    START_COLOR = (0, 255, 0)
+    END_COLOR = (0, 0, 255)
 
-    jps_path = [(j, i) for i, j in jps_path]
+    font = pygame.font.Font(None, 30)
 
-    draw = ImageDraw.Draw(image)
-    draw.line(jps_path, fill=(255, 0, 0, 255), width=2)
+    running = True
+    algorithm = None
+    name = None
+    operations = 0
+    start_time = 0
+    end_time = 0
 
-    astar_start = time()
-    astar_path, opr = astar.search(start, end)
-    astar_end = time()
-    astar_time = astar_end - astar_start
-    print(f"A*: {(astar_time)*1000:.2f} ms, {opr} operations, path length: {astar.distances[end[0]][end[1]]}")
+    while running:
 
-    astar_path = [(j, i) for i, j in astar_path]
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                # Handle mouse clicks
+                if start is None:
+                    start = event.pos
+                elif end is None:
+                    end = event.pos
+                else:
+                    start = None
+                    end = None
+            elif event.type == pygame.KEYDOWN:
+                # Handle key presses
+                if event.key == pygame.K_d:
+                    algorithm = dijkstra
+                    name = "Dijkstra"
+                elif event.key == pygame.K_a:
+                    algorithm = astar
+                    name = "A*"
+                elif event.key == pygame.K_j:
+                    algorithm = jps
+                    name = "JPS"
 
-    draw = ImageDraw.Draw(image)
-    draw.line(astar_path, fill=(0, 0, 255, 255), width=2)
+        # Draw the maze
+        for i in range(width):
+            for j in range(height):
+                color = (255, 255, 255) if matrix[i][j] == 0 else (0, 0, 0)
+                pygame.draw.rect(screen, color, (i, j, 1, 1))
 
-    image.save(f"maps/{map_name}_result.png")
+        # Draw the start and end points
+        if start is not None:
+            pygame.draw.circle(screen, START_COLOR, start, 5)
+        if end is not None:
+            pygame.draw.circle(screen, END_COLOR, end, 5)
 
-    dijkstra_start = time()
-    dijkstra_path, opr = dijkstra.search(start, end)
-    dijkstra_end = time()
-    dijkstra_time = dijkstra_end - dijkstra_start
-    print(f"Dijkstra: {(dijkstra_time)*1000:.2f} ms,{opr} operations, path length: {dijkstra.distances[end[0]][end[1]]}")
+        # Find and draw the path
+        if start is not None and end is not None and algorithm is not None:
+            if algorithm is not jps:
+                start_time = time()
+                path, operations = algorithm.search(start, end)
+                end_time = time()
 
-    dijkstra_path = [(j, i) for i, j in dijkstra_path]
+                if path is not None:
+                    for i, j in path:
+                        pygame.draw.rect(screen, PATH_COLOR, (i, j, 2, 2))
 
-    draw = ImageDraw.Draw(image)
-    draw.line(dijkstra_path, fill=(0, 255, 0, 255), width=1)
+            else:
+                start_time = time()
+                path, operations = algorithm.search(start, end)
+                end_time = time()
 
-    image.save(f"maps/{map_name}_result.png")
+                if path is not None:
+                    for i, j in path:
+                        pygame.draw.rect(screen, (255, 50, 255), (i, j, 4, 4))
+
+        # Display the number of operations and the time taken
+        operations_text = font.render(
+            "Operations: " + str(operations), True, (0, 255, 0))
+        time_text = font.render(
+            "Time: " + str(round(end_time - start_time, 2)) + "s", True, (0, 255, 0))
+        if name is not None:
+            algorithm_text = font.render(
+                "Algorithm: " + name, True, (0, 255, 0))
+            screen.blit(algorithm_text, (0, 60))
+
+        screen.blit(operations_text, (0, 0))
+        screen.blit(time_text, (0, 30))
+
+        pygame.display.update()
+
+    pygame.quit()
 
 
 if __name__ == "__main__":

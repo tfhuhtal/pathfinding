@@ -75,7 +75,7 @@ class TestJPS(unittest.TestCase):
         pixels = image.load()
         width, height = image.size
         matrix = ([[0 if pixels[i, j] == (229, 229, 229, 255) else 1 for i in range(height)]
-             for j in range(width)])
+                   for j in range(width)])
 
         start = (170, 383)
         end = (589, 253)
