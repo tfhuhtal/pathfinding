@@ -25,6 +25,10 @@ Algoritmit on toteutettu käyttäen Pythonin listoja ja sanakirjoja. Algoritmit 
 
 Käyttöliittymää on komentoriviltä ajettava yksinkertainen toteutus. Voit valita 9 eri kartasta missä haluat etsiä lyhimmän polun. Voit valita kartan kirjoittamalla sen nimen. Tulos näytetään kartalla, missä vihreä on este, punainen on A* algoritmin löytämä polku ja sininen on JPS algoritmin löytämä polku. A* algoritmin löytämä polku on myös lyhin polku.
 
+## Suorituskykytestaus
+
+Suorituskykytestauksesta yksityiskohtaisemmin [täällä](./testausdokumentti.md). Suorituskykytestauksessa testatiin kuinka nopeasti algoritmit löytävät lyhimmän/ optimaalisen polun maaliin. Testit suoritettiin 1073x1073 kokoisella kartalla, mikä on ladattu [täältä](https://movingai.com/benchmarks/dao/index.html). Testit suoritettiin 10 kertaa viidellä eri lähtö- ja maalipiste parilla. Testit suoritettiin intel i5 2.4 GHz prosessorilla ja 16 GB muistilla.
+
 ## Lähteet
 
 [1] Dijkstra (3.3.2023). [Wikipedia](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm), luettu 19.3.2023. 
