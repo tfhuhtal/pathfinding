@@ -23,7 +23,7 @@ Algoritmit on toteutettu käyttäen Pythonin listoja ja sanakirjoja. Algoritmit 
 
 ## Käyttöliittymä
 
-Käyttöliittymää on komentoriviltä ajettava yksinkertainen toteutus. Voit valita 9 eri kartasta missä haluat etsiä lyhimmän polun. Voit valita kartan kirjoittamalla sen nimen. Tulos näytetään kartalla, missä vihreä on este, punainen on A* algoritmin löytämä polku ja sininen on JPS algoritmin löytämä polku. A* algoritmin löytämä polku on myös lyhin polku.
+Käyttöliittymää on komentoriviltä ajettava yksinkertainen toteutus. Voit valita 9 eri kartasta missä haluat etsiä lyhimmän polun. Voit valita kartan kirjoittamalla sen nimen. Tämän jälkeen avautuu pygame ikkuna mihin on renderöity haluamasi kartta. Voit valita lähtö- ja maalipisteet sekä algoritmin millä haluat etsiä lyhimmän polun näiden pisteiden välillä.
 
 ## Suorituskykytestaus
 
