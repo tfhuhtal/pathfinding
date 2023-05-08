@@ -37,8 +37,8 @@ def main():
     image = Image.open(f"maps/{map_name}.png")
     pixels = image.load()
     width, height = image.size
-    matrix = ([[0 if pixels[i, j] == (229, 229, 229, 255) else 1 for i in range(height)]
-               for j in range(width)])
+    matrix = ([[0 if pixels[i, j] == (229, 229, 229, 255) else 1 for j in range(height)]
+               for i in range(width)])
 
     jps = JPS(matrix)
     astar = AStar(matrix)
@@ -51,6 +51,8 @@ def main():
     pygame.display.set_caption("Pathfinding Visualizer")
     screen = pygame.display.set_mode((width, height))
     screen.fill((255, 255, 255))
+
+    bg = pygame.image.load(f"maps/{map_name}.png")
 
     PATH_COLOR = (255, 0, 0)
     START_COLOR = (0, 255, 0)
@@ -67,6 +69,7 @@ def main():
 
     while running:
 
+        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -79,6 +82,8 @@ def main():
                 else:
                     start = None
                     end = None
+                    algorithm = None
+                    name = None
             elif event.type == pygame.KEYDOWN:
                 # Handle key presses
                 if event.key == pygame.K_d:
@@ -91,17 +96,14 @@ def main():
                     algorithm = jps
                     name = "JPS"
 
-        # Draw the maze
-        for i in range(width):
-            for j in range(height):
-                color = (255, 255, 255) if matrix[i][j] == 0 else (0, 0, 0)
-                pygame.draw.rect(screen, color, (i, j, 1, 1))
+        screen.blit(bg, (0, 0))
+
 
         # Draw the start and end points
         if start is not None:
-            pygame.draw.circle(screen, START_COLOR, start, 5)
+            pygame.draw.rect(screen, START_COLOR, (start[0], start[1], 8, 8))
         if end is not None:
-            pygame.draw.circle(screen, END_COLOR, end, 5)
+            pygame.draw.rect(screen, END_COLOR, (end[0], end[1], 8, 8))
 
         # Find and draw the path
         if start is not None and end is not None and algorithm is not None:
@@ -125,12 +127,12 @@ def main():
 
         # Display the number of operations and the time taken
         operations_text = font.render(
-            "Operations: " + str(operations), True, (0, 255, 0))
+            "Operations: " + str(operations), True, (0, 255, 135))
         time_text = font.render(
-            "Time: " + str(round(end_time - start_time, 2)) + "s", True, (0, 255, 0))
+            "Time: " + str(round(end_time - start_time, 2)) + "s", True, (0, 255, 135))
         if name is not None:
             algorithm_text = font.render(
-                "Algorithm: " + name, True, (0, 255, 0))
+                "Algorithm: " + name, True, (0, 255, 135))
             screen.blit(algorithm_text, (0, 60))
 
         screen.blit(operations_text, (0, 0))
