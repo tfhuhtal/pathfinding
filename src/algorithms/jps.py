@@ -135,7 +135,7 @@ class JPS:
                     if (next_x, temp_y) == self.goal:
                         return (next_x, temp_y)
 
-        return self.jump(next_x, next_y, dir_x, dir_y)
+        #return self.jump(next_x, next_y, dir_x, dir_y)
 
     # return all possible neighbours of node
     def get_neighbours(self, cur_x, cur_y, parent):
@@ -235,6 +235,7 @@ class JPS:
             dir_y = 0
         return (dir_x, dir_y)
 
+    # returns the distance between two nodes
     def heuristic(self, node1, node2):
         return math.sqrt((node2[0] - node1[0]) ** 2 +
                          (node2[1] - node1[1]) ** 2)

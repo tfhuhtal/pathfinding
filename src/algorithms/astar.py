@@ -72,8 +72,9 @@ class AStar:
             path.append(current)
             current = self.previous[current[0]][current[1]]
         path.append(start)
+        dist = self.distances[end[0]][end[1]]
         self.reset()
-        return path[::-1], operations
+        return path[::-1], operations, dist
 
     # reset the algorithm
     def reset(self):

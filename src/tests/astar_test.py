@@ -22,14 +22,15 @@ class TestAStar(unittest.TestCase):
         start = (0, 0)
         end = (3, 3)
         expected_path = [(0, 0), (0, 1), (1, 2), (2, 2), (3, 3)]
-        path, operations = self.a_star.search(start, end)
-        self.assertEqual(path, expected_path)
+        res = self.a_star.search(start, end)
+        self.assertEqual(res[0], expected_path)
 
     def test_a_star_len(self):
         start = (3, 0)
         end = (0, 0)
-        self.assertEqual(len(self.a_star.search(start, end)),
-                         len(self.dijkstra.search(start, end)))
+        res1 = self.a_star.search(start, end)
+        res2 = self.dijkstra.search(start, end)
+        self.assertEqual(res1[2], res2[2])
 
     def test_a_star_same_start_end(self):
         start = (0, 0)
@@ -55,9 +56,9 @@ class TestAStar(unittest.TestCase):
         a_star = AStar(large_maze)
         start = (0, 0)
         end = (49, 49)
-        path, opr = a_star.search(start, end)
-        path_d, opr = dijkstra.search(start, end)
-        self.assertEqual(path, path_d)
+        res1 = a_star.search(start, end)
+        res2 = dijkstra.search(start, end)
+        self.assertEqual(res1[0], res2[0])
 
     def test_a_star_path(self):
         maze = [
@@ -77,9 +78,9 @@ class TestAStar(unittest.TestCase):
         a_star = AStar(maze)
         start = (0, 0)
         end = (9, 9)
-        path, opr = a_star.search(start, end)
-        path_d, opr = dijkstra.search(start, end)
-        self.assertEqual(path, path_d)
+        res1 = a_star.search(start, end)
+        res2 = dijkstra.search(start, end)
+        self.assertEqual(res1[0], res2[0])
 
     def test_a_star_path_rev(self):
         maze = [
@@ -99,12 +100,34 @@ class TestAStar(unittest.TestCase):
         a_star = AStar(maze)
         start = (9, 9)
         end = (0, 0)
-        path, opr = a_star.search(start, end)
-        path_d, opr = dijkstra.search(start, end)
-        self.assertEqual(path, path_d)
+        res1 = a_star.search(start, end)
+        res2 = dijkstra.search(start, end)
+        self.assertEqual(res1[0], res2[0])
 
     def test_operation_count(self):
         start = (0, 0)
         end = (3, 3)
-        path, operations = self.a_star.search(start, end)
-        self.assertEqual(operations, 6)
+        res = self.a_star.search(start, end)
+        self.assertEqual(res[1], 6)
+
+    def test_distance(self):
+        maze = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+            [0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 0]
+        ]
+
+        dijkstra = Dijkstra(maze)
+        a_star = AStar(maze)
+        start = (9, 9)
+        end = (0, 0)
+        res1 = a_star.search(start, end)
+        res2 = dijkstra.search(start, end)
+        self.assertEqual(res1[2], res2[2])

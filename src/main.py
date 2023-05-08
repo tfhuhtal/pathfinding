@@ -66,6 +66,7 @@ def main():
     operations = 0
     start_time = 0
     end_time = 0
+    dist = None
 
     while running:
 
@@ -95,9 +96,9 @@ def main():
                 elif event.key == pygame.K_j:
                     algorithm = jps
                     name = "JPS"
+                    dist = None
 
         screen.blit(bg, (0, 0))
-
 
         # Draw the start and end points
         if start is not None:
@@ -109,8 +110,9 @@ def main():
         if start is not None and end is not None and algorithm is not None:
             if algorithm is not jps:
                 start_time = time()
-                path, operations = algorithm.search(start, end)
+                path, operations, dist = algorithm.search(start, end)
                 end_time = time()
+
 
                 if path is not None:
                     for i, j in path:
@@ -118,7 +120,7 @@ def main():
 
             else:
                 start_time = time()
-                path, operations = algorithm.search(start, end)
+                path, operations = jps.search(start, end)
                 end_time = time()
 
                 if path is not None:
@@ -134,6 +136,10 @@ def main():
             algorithm_text = font.render(
                 "Algorithm: " + name, True, (0, 255, 135))
             screen.blit(algorithm_text, (0, 60))
+
+        if dist is not None:
+            dist_text = font.render(f"Distance: {dist:.5f}", True, (0, 255, 135))
+            screen.blit(dist_text, (0, 90))
 
         screen.blit(operations_text, (0, 0))
         screen.blit(time_text, (0, 30))
