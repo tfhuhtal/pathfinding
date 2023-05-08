@@ -81,6 +81,8 @@ class TestJPS(unittest.TestCase):
         end = (589, 253)
 
         jps = JPS(matrix)
+        astar = AStar(matrix)
 
         path = jps.search(start, end)
-        self.assertEqual(len(path[0]), 31)
+        res = astar.search(start, end)
+        self.assertEqual(round(path[2], 8), round(res[2], 8))

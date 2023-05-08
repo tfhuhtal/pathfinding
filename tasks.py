@@ -26,4 +26,4 @@ def html(ctx):
 
 @task
 def clean(ctx):
-    ctx.run("autopep8 --in-place --aggressive ./src/*.py", pty=True)
+    ctx.run("autopep8 --in-place --aggressive ./src/tests/*.py", pty=True)

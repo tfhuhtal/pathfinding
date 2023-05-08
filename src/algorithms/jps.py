@@ -38,7 +38,7 @@ class JPS:
                     current = previous[current]
                 res.append(self.start)
                 res = res[::-1]
-                return (res, operations)
+                return (res, operations, gscore[self.goal])
 
             close_set.add(current)
 
@@ -62,7 +62,7 @@ class JPS:
                     fscore[jump_point] = tentative_g_score + \
                         self.heuristic(jump_point, self.goal)
                     heapq.heappush(queue, (fscore[jump_point], jump_point))
-        return (None, operations)
+        return (None, operations, None)
 
     # return jump points
     def jump(self, cur_x, cur_y, dir_x, dir_y):

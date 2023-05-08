@@ -113,14 +113,13 @@ def main():
                 path, operations, dist = algorithm.search(start, end)
                 end_time = time()
 
-
                 if path is not None:
                     for i, j in path:
                         pygame.draw.rect(screen, PATH_COLOR, (i, j, 2, 2))
 
             else:
                 start_time = time()
-                path, operations = jps.search(start, end)
+                path, operations, dist = jps.search(start, end)
                 end_time = time()
 
                 if path is not None:
@@ -129,16 +128,16 @@ def main():
 
         # Display the number of operations and the time taken
         operations_text = font.render(
-            "Operations: " + str(operations), True, (0, 255, 135))
+            "Operations: " + str(operations), True, PATH_COLOR)
         time_text = font.render(
-            "Time: " + str(round(end_time - start_time, 2)) + "s", True, (0, 255, 135))
+            "Time: " + str(round(end_time - start_time, 5)) + "s", True, PATH_COLOR)
         if name is not None:
             algorithm_text = font.render(
-                "Algorithm: " + name, True, (0, 255, 135))
+                "Algorithm: " + name, True, PATH_COLOR)
             screen.blit(algorithm_text, (0, 60))
 
         if dist is not None:
-            dist_text = font.render(f"Distance: {dist:.5f}", True, (0, 255, 135))
+            dist_text = font.render(f"Distance: {dist:.5f}", True, PATH_COLOR)
             screen.blit(dist_text, (0, 90))
 
         screen.blit(operations_text, (0, 0))
