@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is a pathfinding visualizer. It uses the [Dijkstra's shortest path algorithm](./src/algorithms/dijkstra.py), [A* algorithm](./src/algorithms/astar.py) and [Jump Point Search algorithm](./src/algorithms/jps.py) to find the shortest path between two points. The user can choose in [maps](./maps/) folder a map to visualize the pathfinding algorithm.
+This project is a pathfinding visualizer. It uses the [Dijkstra's shortest path algorithm](./pathfinding/src/algorithms/dijkstra.py), [A* algorithm](./pathfinding/src/algorithms/astar.py) and [Jump Point Search algorithm](./pathfinding/src/algorithms/jps.py) to find the shortest path between two points. The user can choose in [maps](./maps/) folder a map to visualize the pathfinding algorithm.
 
 ## Documentation
 
