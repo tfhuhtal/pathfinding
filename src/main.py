@@ -123,8 +123,12 @@ def main():
 
             else:
                 start_time = time()
-                path, operations, dist = jps.search(start, end)
+                path, operations, dist, visited = jps.search(start, end)
                 end_time = time()
+
+                if visited is not None:
+                    for i, j in visited:
+                        pygame.draw.rect(screen, (0, 0, 0), (i, j, 1, 1))
 
                 if path is not None:
                     for i, j in path:
