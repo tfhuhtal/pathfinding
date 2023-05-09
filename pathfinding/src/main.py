@@ -34,7 +34,7 @@ def main():
             map_name = 'map1'
             break
 
-    image = Image.open(f"maps/{map_name}.png")
+    image = Image.open(f"./pathfinding/maps/{map_name}.png")
     pixels = image.load()
     width, height = image.size
     matrix = ([[0 if pixels[i, j] == (229, 229, 229, 255) else 1 for j in range(height)]
@@ -52,7 +52,7 @@ def main():
     screen = pygame.display.set_mode((width, height))
     screen.fill((255, 255, 255))
 
-    bg = pygame.image.load(f"maps/{map_name}.png")
+    bg = pygame.image.load(f"./pathfinding/maps/{map_name}.png")
 
     PATH_COLOR = (255, 0, 0)
     START_COLOR = (0, 255, 0)

@@ -22,7 +22,7 @@ Kuten kuvasta näkee testikattavuus on 99%%, vain joitakin JPS algoritmin kohtia
 
 ## Suorityskykytestaus
 
-map5: <img src="https://github.com/tfhuhtal/pathfinding/blob/main/maps/map5.png" width="250">
+map5: <img src="https://github.com/tfhuhtal/pathfinding/blob/main/pathfindig/maps/map5.png" width="250">
 
 Suorituskyky testaus on toteutettu kartalla 'map5', koska tämä kartta on monipuolisin. Testaus on toteutettu siten, että jokainen algoritmi on ajettu 10 kertaa viidessä eri mielivaltaisesti valitussa lähtö- ja maalipisteessä. Tämän jälkeen on laskettu keskiarvo jokaiselle algoritmille ajan ja operaatioiden määrän suhteen.
 
