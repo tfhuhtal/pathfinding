@@ -21,6 +21,7 @@ class AStar:
         self.distances[start[0]][start[1]] = 0
         self.previous[start[0]][start[1]] = start
         operations = 0
+        vis = []
 
         heap = [(self.heuristic(start, end), start)]
         while heap:
@@ -30,6 +31,7 @@ class AStar:
                 break
             if not self.visited[current[0]][current[1]]:
                 self.visited[current[0]][current[1]] = True
+                vis.append(current)
 
             for direction in self.directions:
                 neighbor = (
@@ -51,7 +53,7 @@ class AStar:
                         heapq.heappush(heap, (self.heuristic(neighbor, end)
                                               + new_distance, neighbor))
 
-        return self.get_path(start, end, operations)
+        return self.get_path(start, end, operations, vis)
 
     # return heuristic value of node
     def heuristic(self, node, end):
@@ -65,7 +67,7 @@ class AStar:
                 and self.maze[node[0]][node[1]] == 0)
 
     # return path and number of operations
-    def get_path(self, start, end, operations):
+    def get_path(self, start, end, operations, vis):
         path = []
         current = end
         while current != start:
@@ -74,10 +76,11 @@ class AStar:
         path.append(start)
         dist = self.distances[end[0]][end[1]]
         self.reset()
-        return path[::-1], operations, dist
+        return path[::-1], operations, dist, vis
 
     # reset the algorithm
     def reset(self):
         self.visited = [[False] * self.cols for _ in range(self.rows)]
         self.distances = [[float('inf')] * self.cols for _ in range(self.rows)]
         self.previous = [[None] * self.cols for _ in range(self.rows)]
+

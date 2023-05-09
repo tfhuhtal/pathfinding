@@ -110,8 +110,12 @@ def main():
         if start is not None and end is not None and algorithm is not None:
             if algorithm is not jps:
                 start_time = time()
-                path, operations, dist = algorithm.search(start, end)
+                path, operations, dist, visited = algorithm.search(start, end)
                 end_time = time()
+
+                if visited is not None:
+                    for i, j in visited:
+                        pygame.draw.rect(screen, (200, 255, 200), (i, j, 1, 1))
 
                 if path is not None:
                     for i, j in path:

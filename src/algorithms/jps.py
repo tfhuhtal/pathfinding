@@ -135,8 +135,6 @@ class JPS:
                     if (next_x, temp_y) == self.goal:
                         return (next_x, temp_y)
 
-        #return self.jump(next_x, next_y, dir_x, dir_y)
-
     # return all possible neighbours of node
     def get_neighbours(self, cur_x, cur_y, parent):
         neighbours = []
